@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>試し打ち場ステージ変更 - コード生成</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Flex:opsz,wght@10..40,400..700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --seed:#a13d63;
+    --primary:#9c3a63;
+    --on-primary:#ffffff;
+    --primary-container:#ffd9e3;
+    --on-primary-container:#3c0021;
+    --secondary-container:#f4dde2;
+    --on-secondary-container:#4d3037;
+    --surface:#fff8f7;
+    --surface-dim:#e8d6d9;
+    --surface-container:#fbeef0;
+    --surface-container-high:#f2e0e3;
+    --on-surface:#22191b;
+    --on-surface-variant:#524347;
+    --outline:#847377;
+    --success-container:#d7f2d0;
+    --on-success-container:#0c390c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--surface);
+    color:var(--on-surface);
+    font-family:'Roboto Flex','Roboto',sans-serif;
+    padding:0 0 48px;
+  }
+  .topbar{
+    padding:28px 20px 16px;
+  }
+  .topbar h1{
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 4px;
+    letter-spacing:.01em;
+  }
+  .topbar p{
+    margin:0;
+    font-size:13px;
+    color:var(--on-surface-variant);
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 16px;}
+
+  .card{
+    background:var(--surface-container);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:16px;
+  }
+  .card-label{
+    font-size:12px;
+    font-weight:500;
+    color:var(--primary);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:12px;
+  }
+
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  .field-hint{
+    font-size:12px;
+    color:var(--on-surface-variant);
+    margin-top:6px;
+    line-height:1.5;
+  }
+
+  select, input[type=text]{
+    width:100%;
+    appearance:none;
+    -webkit-appearance:none;
+    background:var(--surface-container-high);
+    border:none;
+    border-radius:16px;
+    color:var(--on-surface);
+    padding:16px 44px 16px 16px;
+    font-family:inherit;
+    font-size:16px;
+    font-weight:500;
+  }
+  select{
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23524347'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    background-size:22px;
+  }
+  input[type=text]{padding:16px;}
+  select:focus, input:focus{outline:2px solid var(--primary);outline-offset:2px;}
+
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    background:var(--surface-container-high);
+    border:none;
+    border-radius:100px;
+    padding:10px 16px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--on-surface);
+    cursor:pointer;
+  }
+  .chip.selected{
+    background:var(--primary-container);
+    color:var(--on-primary-container);
+  }
+
+  button.primary{
+    width:100%;
+    background:var(--primary);
+    color:var(--on-primary);
+    border:none;
+    border-radius:100px;
+    padding:16px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.02em;
+    cursor:pointer;
+  }
+  button.primary:active{opacity:.85;}
+
+  button.text{
+    width:100%;
+    background:transparent;
+    color:var(--primary);
+    border:none;
+    padding:12px;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:4px;
+  }
+
+  .out-card{
+    background:var(--success-container);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:16px;
+  }
+  .out-label{
+    font-size:12px;
+    font-weight:500;
+    color:var(--on-success-container);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:10px;
+  }
+  pre{
+    background:rgba(255,255,255,.55);
+    border-radius:16px;
+    padding:14px;
+    font-family:'Roboto Mono',monospace;
+    font-size:12.5px;
+    white-space:pre-wrap;
+    word-break:break-all;
+    color:var(--on-success-container);
+    max-height:260px;
+    overflow-y:auto;
+    margin:0 0 10px;
+  }
+
+  details{margin-top:20px;}
+  details summary{
+    font-size:13px;
+    font-weight:500;
+    color:var(--on-surface-variant);
+    cursor:pointer;
+    padding:4px 0;
+  }
+  details[open] summary{color:var(--primary);}
+  details ul{
+    margin:10px 0 0;
+    padding-left:18px;
+    font-size:12.5px;
+    color:var(--on-surface-variant);
+    line-height:1.7;
+  }
+
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div class="topbar wrap">
+  <h1>試し打ち場ステージ変更</h1>
+  <p>Splatoon (Wii U) / JGecko U 用コード生成</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-label">変換先ステージ</div>
+    <div class="field">
+      <select id="stageSel"></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">ゲームバージョン</div>
+    <div class="field">
+      <div class="chip-row" id="verChips">
+        <button class="chip selected" data-addr="105FB958">Ver 2.7.0 / 2.8.0</button>
+        <button class="chip" data-addr="">その他(手動入力)</button>
+      </div>
+    </div>
+    <div class="field">
+      <input type="text" id="addr" value="105FB958" maxlength="8" autocapitalize="characters" placeholder="対象アドレス(8桁hex)">
+      <div class="field-hint">反映されない場合は JGecko U の Memory Search で内部名文字列(例: Fld_ShootingRange_Shr)を検索してアドレスを差し替えてください。</div>
+    </div>
+  </div>
+
+  <button class="primary" id="genBtn">Geckoコードを生成</button>
+
+  <div class="out-card hidden" id="outPanel">
+    <div class="out-label">JGecko U コード</div>
+    <pre id="outCode"></pre>
+    <button class="primary" id="copyBtn" style="background:var(--on-success-container)">コピー</button>
+  </div>
+
+  <details>
+    <summary>使い方・注意事項</summary>
+    <ul>
+      <li>出力された行を JGecko U のコードリストにそのまま貼り付けてください。04＝32bit書き込みコードで、終端行は不要です。</li>
+      <li>オフライン・ローカルプレイでの利用を想定しています。セーブデータは事前にバックアップしてください。</li>
+      <li>ステージ内部名はOSSツール(GeckoMapTester系列)を参考に作成しています。</li>
+    </ul>
+  </details>
+
+</div>
+
+<script>
+// Verified stage list: [表示名(日本語), 内部名, Dojoで確認済みか]
+const stages = [
+  ["デカライン高架下 (試し打ち場用)", "Fld_Crank00_Dul"],
+  ["ハコフグ倉庫 (試し打ち場用)", "Fld_Warehouse00_Dul"],
+  ["シオノメ油田 (試し打ち場用)", "Fld_SeaPlant00_Dul"],
+  ["アロワナモール (試し打ち場用)", "Fld_UpDown00_Dul"],
+  ["Bバスパーク (試し打ち場用)", "Fld_SkatePark00_Dul"],
+  ["── 通常ステージ内部名(参考/実験用) ──", null],
+  ["デカライン高架下", "Fld_Crank00_Vss"],
+  ["ハコフグ倉庫", "Fld_Warehouse00_Vss"],
+  ["シオノメ油田", "Fld_SeaPlant00_Vss"],
+  ["アロワナモール", "Fld_UpDown00_Vss"],
+  ["Bバスパーク", "Fld_SkatePark00_Vss"],
+  ["モンガラキャンプ場", "Fld_Athletic00_Vss"],
+  ["ホッケふ頭", "Fld_Amida00_Vss"],
+  ["モズク農園", "Fld_Maze00_Vss"],
+  ["タチウオパーキング", "Fld_Tuzura00_Vss"],
+  ["ネギトロ炭鉱", "Fld_Ruins00_Vss"],
+  ["アンチョビットゲームズ", "Fld_Office00_Vss"],
+  ["ショッツル鉱山", "Fld_Quarry00_Vss"],
+  ["ヒラメが丘団地", "Fld_Jyoheki00_Vss"],
+  ["キンメダイ美術館", "Fld_Pivot00_Vss"],
+  ["マヒマヒリゾート＆スパ", "Fld_Hiagari00_Vss"],
+  ["マサバ海峡大橋", "Fld_Kaisou00_Vss"],
+];
+
+const PAD_LEN = "Fld_BossCylinderKing_Bos_Msn".length; // 29, 元ツールのフィールド幅に合わせる
+
+const stageSel = document.getElementById('stageSel');
+stages.forEach(([label, internal], i) => {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = label;
+  if (internal === null) opt.disabled = true;
+  stageSel.appendChild(opt);
+});
+stageSel.selectedIndex = 0;
+
+const addrInput = document.getElementById('addr');
+document.querySelectorAll('#verChips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#verChips .chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    if (chip.dataset.addr) addrInput.value = chip.dataset.addr;
+    addrInput.focus();
+  });
+});
+
+function stageNameToWords(name, padLength){
+  const bytes = [];
+  for (const ch of name) bytes.push(ch.charCodeAt(0) & 0xFF);
+  while (bytes.length < padLength) bytes.push(0);
+  const words = [];
+  for (let i = 0; i < bytes.length; i += 4){
+    const chunk = bytes.slice(i, i+4);
+    while (chunk.length < 4) chunk.push(0);
+    let val = 0;
+    for (const b of chunk) val = ((val << 8) | b) >>> 0;
+    words.push(val);
+  }
+  return words;
+}
+
+function hex8(n){
+  return (n >>> 0).toString(16).toUpperCase().padStart(8, '0');
+}
+
+document.getElementById('genBtn').addEventListener('click', () => {
+  const idx = stageSel.value;
+  const [label, internal] = stages[idx];
+  if (!internal){
+    alert('ステージを選択してください');
+    return;
+  }
+  let addrText = addrInput.value.trim().replace(/^0[xX]/, '').replace(/[^0-9a-fA-F]/g, '');
+  if (addrText.length === 0 || addrText.length > 8){
+    alert('アドレスは1〜8桁の16進数で入力してください');
+    return;
+  }
+  const baseAddr = parseInt(addrText, 16);
+  const words = stageNameToWords(internal, PAD_LEN);
+
+  let lines = [];
+  lines.push(`// 試し打ち場 → ${label}`);
+  lines.push(`// internal name: ${internal}`);
+  words.forEach((w, i) => {
+    const addr = baseAddr + i*4;
+    lines.push(`04${hex8(addr)} ${hex8(w)}`);
+  });
+
+  document.getElementById('outCode').textContent = lines.join('\n');
+  document.getElementById('outPanel').classList.remove('hidden');
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('outCode').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'コピーしました';
+    setTimeout(() => btn.textContent = orig, 1200);
+  });
+});
+</script>
+</body>
+</html>
