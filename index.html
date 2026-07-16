@@ -3,277 +3,326 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>試し打ち場ステージ変更 - コード生成</title>
+<title>Splatoon WiiU チートコード生成</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Flex:opsz,wght@10..40,400..700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --seed:#a13d63;
     --primary:#9c3a63;
     --on-primary:#ffffff;
     --primary-container:#ffd9e3;
     --on-primary-container:#3c0021;
     --secondary-container:#f4dde2;
-    --on-secondary-container:#4d3037;
     --surface:#fff8f7;
-    --surface-dim:#e8d6d9;
     --surface-container:#fbeef0;
     --surface-container-high:#f2e0e3;
     --on-surface:#22191b;
     --on-surface-variant:#524347;
-    --outline:#847377;
     --success-container:#d7f2d0;
     --on-success-container:#0c390c;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--surface);
-    color:var(--on-surface);
-    font-family:'Roboto Flex','Roboto',sans-serif;
-    padding:0 0 48px;
-  }
-  .topbar{
-    padding:28px 20px 16px;
-  }
-  .topbar h1{
-    font-size:22px;
-    font-weight:700;
-    margin:0 0 4px;
-    letter-spacing:.01em;
-  }
-  .topbar p{
-    margin:0;
-    font-size:13px;
-    color:var(--on-surface-variant);
-  }
+  body{margin:0;background:var(--surface);color:var(--on-surface);font-family:'Roboto Flex','Roboto',sans-serif;padding:0 0 48px;}
+  .topbar{padding:24px 20px 12px;}
+  .topbar h1{font-size:20px;font-weight:700;margin:0 0 4px;}
+  .topbar p{margin:0;font-size:13px;color:var(--on-surface-variant);}
   .wrap{max-width:520px;margin:0 auto;padding:0 16px;}
 
-  .card{
-    background:var(--surface-container);
-    border-radius:24px;
-    padding:20px;
-    margin-bottom:16px;
+  .tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;}
+  .tab{
+    flex:none;background:var(--surface-container-high);border:none;border-radius:100px;
+    padding:10px 16px;font-size:13px;font-weight:500;color:var(--on-surface);cursor:pointer;white-space:nowrap;
   }
-  .card-label{
-    font-size:12px;
-    font-weight:500;
-    color:var(--primary);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin-bottom:12px;
-  }
+  .tab.active{background:var(--primary);color:var(--on-primary);}
+  .panel{display:none;}
+  .panel.active{display:block;}
 
+  .card{background:var(--surface-container);border-radius:24px;padding:20px;margin-bottom:16px;}
+  .card-label{font-size:12px;font-weight:500;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
   .field{margin-bottom:14px;}
   .field:last-child{margin-bottom:0;}
-  .field-hint{
-    font-size:12px;
-    color:var(--on-surface-variant);
-    margin-top:6px;
-    line-height:1.5;
-  }
-
+  .field-hint{font-size:12px;color:var(--on-surface-variant);margin-top:6px;line-height:1.5;}
   select, input[type=text]{
-    width:100%;
-    appearance:none;
-    -webkit-appearance:none;
-    background:var(--surface-container-high);
-    border:none;
-    border-radius:16px;
-    color:var(--on-surface);
-    padding:16px 44px 16px 16px;
-    font-family:inherit;
-    font-size:16px;
-    font-weight:500;
+    width:100%;appearance:none;-webkit-appearance:none;background:var(--surface-container-high);
+    border:none;border-radius:16px;color:var(--on-surface);padding:16px 44px 16px 16px;
+    font-family:inherit;font-size:15px;font-weight:500;
   }
   select{
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23524347'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat:no-repeat;
-    background-position:right 14px center;
-    background-size:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23524347'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;background-position:right 14px center;background-size:22px;
   }
   input[type=text]{padding:16px;}
   select:focus, input:focus{outline:2px solid var(--primary);outline-offset:2px;}
 
   .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
-  .chip{
-    background:var(--surface-container-high);
-    border:none;
-    border-radius:100px;
-    padding:10px 16px;
-    font-size:13px;
-    font-weight:500;
-    color:var(--on-surface);
-    cursor:pointer;
-  }
-  .chip.selected{
-    background:var(--primary-container);
-    color:var(--on-primary-container);
-  }
+  .chip{background:var(--surface-container-high);border:none;border-radius:100px;padding:10px 16px;font-size:13px;font-weight:500;color:var(--on-surface);cursor:pointer;}
+  .chip.selected{background:var(--primary-container);color:var(--on-primary-container);}
 
-  button.primary{
-    width:100%;
-    background:var(--primary);
-    color:var(--on-primary);
-    border:none;
-    border-radius:100px;
-    padding:16px;
-    font-family:inherit;
-    font-size:15px;
-    font-weight:700;
-    letter-spacing:.02em;
-    cursor:pointer;
-  }
+  button.primary{width:100%;background:var(--primary);color:var(--on-primary);border:none;border-radius:100px;padding:16px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;}
   button.primary:active{opacity:.85;}
-
-  button.text{
-    width:100%;
-    background:transparent;
-    color:var(--primary);
-    border:none;
-    padding:12px;
-    font-family:inherit;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:4px;
+  button.small{
+    background:var(--primary-container);color:var(--on-primary-container);border:none;border-radius:100px;
+    padding:9px 14px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;
   }
 
-  .out-card{
-    background:var(--success-container);
-    border-radius:24px;
-    padding:20px;
-    margin-bottom:16px;
-  }
-  .out-label{
-    font-size:12px;
-    font-weight:500;
-    color:var(--on-success-container);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin-bottom:10px;
-  }
-  pre{
-    background:rgba(255,255,255,.55);
-    border-radius:16px;
-    padding:14px;
-    font-family:'Roboto Mono',monospace;
-    font-size:12.5px;
-    white-space:pre-wrap;
-    word-break:break-all;
-    color:var(--on-success-container);
-    max-height:260px;
-    overflow-y:auto;
-    margin:0 0 10px;
-  }
+  .out-card{background:var(--success-container);border-radius:24px;padding:20px;margin-bottom:16px;}
+  .out-label{font-size:12px;font-weight:500;color:var(--on-success-container);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  pre{background:rgba(255,255,255,.55);border-radius:16px;padding:14px;font-family:'Roboto Mono',monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-all;color:var(--on-success-container);max-height:260px;overflow-y:auto;margin:0 0 10px;}
 
-  details{margin-top:20px;}
-  details summary{
-    font-size:13px;
-    font-weight:500;
-    color:var(--on-surface-variant);
-    cursor:pointer;
-    padding:4px 0;
-  }
+  .cheat-row{display:flex;align-items:center;gap:8px;background:var(--surface-container-high);border-radius:16px;padding:12px 14px;margin-bottom:10px;}
+  .cheat-row:last-child{margin-bottom:0;}
+  .cheat-info{flex:1;}
+  .cheat-name{font-size:13.5px;font-weight:500;}
+  .cheat-addr{font-size:11px;color:var(--on-surface-variant);font-family:'Roboto Mono',monospace;}
+  .cheat-row input[type=text]{width:76px;padding:10px;font-size:13px;flex:none;}
+
+  details{margin-top:16px;}
+  details summary{font-size:13px;font-weight:500;color:var(--on-surface-variant);cursor:pointer;padding:4px 0;}
   details[open] summary{color:var(--primary);}
-  details ul{
-    margin:10px 0 0;
-    padding-left:18px;
-    font-size:12.5px;
-    color:var(--on-surface-variant);
-    line-height:1.7;
-  }
-
+  details ul{margin:10px 0 0;padding-left:18px;font-size:12.5px;color:var(--on-surface-variant);line-height:1.7;}
   .hidden{display:none;}
+  .warn-card{background:#fdeee0;border-radius:16px;padding:14px 16px;font-size:12px;color:#5c3b16;margin-bottom:16px;line-height:1.6;}
 </style>
 </head>
 <body>
 
 <div class="topbar wrap">
-  <h1>試し打ち場ステージ変更</h1>
-  <p>Splatoon (Wii U) / JGecko U 用コード生成</p>
+  <h1>Splatoon WiiU チートコード生成</h1>
+  <p>JGecko U 用 / codetype 00 (32bit RAM Write)</p>
 </div>
 
 <div class="wrap">
 
-  <div class="card">
-    <div class="card-label">変換先ステージ</div>
-    <div class="field">
-      <select id="stageSel"></select>
-    </div>
+  <div class="warn-card">
+    アドレスはコミュニティ(GBAtemp等)の投稿情報を基にしており、主に <b>Ver 2.7.0 / 2.8.0 (EU/NA)</b> で報告されたものです。バージョンによっては動作しない場合があります。オンライン対戦での使用検出・アカウントBANの報告があるため、<b>オフライン・ローカルプレイでの使用を強く推奨</b>します。
   </div>
 
-  <div class="card">
-    <div class="card-label">ゲームバージョン</div>
-    <div class="field">
-      <div class="chip-row" id="verChips">
-        <button class="chip selected" data-addr="105FB958">Ver 2.7.0 / 2.8.0</button>
-        <button class="chip" data-addr="">その他(手動入力)</button>
+  <div class="tabs">
+    <button class="tab active" data-tab="stage">ステージ変更</button>
+    <button class="tab" data-tab="known">既知チート</button>
+    <button class="tab" data-tab="custom">カスタム</button>
+  </div>
+
+  <!-- ============ タブ1: ステージ変更 ============ -->
+  <div class="panel active" id="panel-stage">
+    <div class="card">
+      <div class="card-label">変換先ステージ</div>
+      <div class="field">
+        <select id="stageSel"></select>
       </div>
     </div>
-    <div class="field">
-      <input type="text" id="addr" value="105FB958" maxlength="8" autocapitalize="characters" placeholder="対象アドレス(8桁hex)">
-      <div class="field-hint">反映されない場合は JGecko U の Memory Search で内部名文字列(例: Fld_ShootingRange_Shr)を検索してアドレスを差し替えてください。</div>
+
+    <div class="card">
+      <div class="card-label">ゲームバージョン</div>
+      <div class="field">
+        <div class="chip-row" id="verChips">
+          <button class="chip selected" data-addr="105FB958">Ver 2.7.0 / 2.8.0</button>
+          <button class="chip" data-addr="">その他(手動入力)</button>
+        </div>
+      </div>
+      <div class="field">
+        <input type="text" id="addr" value="105FB958" maxlength="8" autocapitalize="characters" placeholder="対象アドレス(8桁hex)">
+        <div class="field-hint">反映されない場合は JGecko U の Memory Search で内部名文字列(例: Fld_ShootingRange_Shr)を検索してアドレスを差し替えてください。</div>
+      </div>
+    </div>
+
+    <button class="primary" id="genStageBtn">Geckoコードを生成</button>
+
+    <div class="out-card hidden" id="outPanelStage">
+      <div class="out-label">JGecko U コード</div>
+      <pre id="outCodeStage"></pre>
+      <button class="primary" id="copyBtnStage" style="background:var(--on-success-container)">コピー</button>
     </div>
   </div>
 
-  <button class="primary" id="genBtn">Geckoコードを生成</button>
+  <!-- ============ タブ2: 既知チート ============ -->
+  <div class="panel" id="panel-known">
+    <div class="card">
+      <div class="card-label">所持金・レベル・貝殻(Ver2.7.0 EU/NA)</div>
+      <div id="knownCheatsList"></div>
+    </div>
+    <div class="out-card hidden" id="outPanelKnown">
+      <div class="out-label">JGecko U コード</div>
+      <pre id="outCodeKnown"></pre>
+      <button class="primary" id="copyBtnKnown" style="background:var(--on-success-container)">コピー</button>
+    </div>
+  </div>
 
-  <div class="out-card hidden" id="outPanel">
-    <div class="out-label">JGecko U コード</div>
-    <pre id="outCode"></pre>
-    <button class="primary" id="copyBtn" style="background:var(--on-success-container)">コピー</button>
+  <!-- ============ タブ3: カスタムコード ============ -->
+  <div class="panel" id="panel-custom">
+    <div class="card">
+      <div class="card-label">種類</div>
+      <div class="chip-row" id="customTypeChips">
+        <button class="chip selected" data-type="value">32bit値書き込み</button>
+        <button class="chip" data-type="string">文字列書き込み</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">パラメータ</div>
+      <div class="field">
+        <input type="text" id="customAddr" placeholder="対象アドレス(8桁hex)" maxlength="8" autocapitalize="characters">
+      </div>
+      <div class="field" id="customValueField">
+        <input type="text" id="customValue" placeholder="書き込む値(8桁hex, 例: 0098967F)" maxlength="8" autocapitalize="characters">
+      </div>
+      <div class="field hidden" id="customStringField">
+        <input type="text" id="customString" placeholder="書き込む文字列">
+        <div class="field-hint" id="customPadHint"></div>
+      </div>
+    </div>
+    <button class="primary" id="genCustomBtn">Geckoコードを生成</button>
+    <div class="out-card hidden" id="outPanelCustom">
+      <div class="out-label">JGecko U コード</div>
+      <pre id="outCodeCustom"></pre>
+      <button class="primary" id="copyBtnCustom" style="background:var(--on-success-container)">コピー</button>
+    </div>
   </div>
 
   <details>
     <summary>使い方・注意事項</summary>
     <ul>
-      <li>出力された行を JGecko U のコードリストにそのまま貼り付けてください。04＝32bit書き込みコードで、終端行は不要です。</li>
-      <li>オフライン・ローカルプレイでの利用を想定しています。セーブデータは事前にバックアップしてください。</li>
-      <li>ステージ内部名はOSSツール(GeckoMapTester系列)を参考に作成しています。</li>
+      <li>JGecko Uの「Codes」タブ→「Add Codes」で、Titleに任意の名前、Codeに出力された行をそのまま貼り付けてOK。コード一覧にチェックを入れて「Send Codes」で反映されます。</li>
+      <li>コードは00(32bit RAM Write)codetypeを2行1組で連続させた形式です。コメント行は含めていません(JGecko Uのコード欄はコメント非対応のため)。</li>
+      <li>ステージ内部名はOSSツール(GeckoMapTester系列)を、所持金等のアドレスはGBAtempコミュニティの報告を参考にしています。</li>
     </ul>
   </details>
 
 </div>
 
 <script>
-// Verified stage list: [表示名(日本語), 内部名, Dojoで確認済みか]
-const stages = [
-  ["デカライン高架下 (試し打ち場用)", "Fld_Crank00_Dul"],
-  ["ハコフグ倉庫 (試し打ち場用)", "Fld_Warehouse00_Dul"],
-  ["シオノメ油田 (試し打ち場用)", "Fld_SeaPlant00_Dul"],
-  ["アロワナモール (試し打ち場用)", "Fld_UpDown00_Dul"],
-  ["Bバスパーク (試し打ち場用)", "Fld_SkatePark00_Dul"],
-  ["── 通常ステージ内部名(参考/実験用) ──", null],
-  ["デカライン高架下", "Fld_Crank00_Vss"],
-  ["ハコフグ倉庫", "Fld_Warehouse00_Vss"],
-  ["シオノメ油田", "Fld_SeaPlant00_Vss"],
-  ["アロワナモール", "Fld_UpDown00_Vss"],
-  ["Bバスパーク", "Fld_SkatePark00_Vss"],
-  ["モンガラキャンプ場", "Fld_Athletic00_Vss"],
-  ["ホッケふ頭", "Fld_Amida00_Vss"],
-  ["モズク農園", "Fld_Maze00_Vss"],
-  ["タチウオパーキング", "Fld_Tuzura00_Vss"],
-  ["ネギトロ炭鉱", "Fld_Ruins00_Vss"],
-  ["アンチョビットゲームズ", "Fld_Office00_Vss"],
-  ["ショッツル鉱山", "Fld_Quarry00_Vss"],
-  ["ヒラメが丘団地", "Fld_Jyoheki00_Vss"],
-  ["キンメダイ美術館", "Fld_Pivot00_Vss"],
-  ["マヒマヒリゾート＆スパ", "Fld_Hiagari00_Vss"],
-  ["マサバ海峡大橋", "Fld_Kaisou00_Vss"],
+/* ===================== 共通ユーティリティ ===================== */
+function hex8(n){ return (n >>> 0).toString(16).toUpperCase().padStart(8, '0'); }
+
+function stageNameToWords(name, padLength){
+  const bytes = [];
+  for (const ch of name) bytes.push(ch.charCodeAt(0) & 0xFF);
+  while (bytes.length < padLength) bytes.push(0);
+  if (bytes.length % 4 !== 0) bytes.length += 4 - (bytes.length % 4);
+  const words = [];
+  for (let i = 0; i < bytes.length; i += 4){
+    const chunk = [bytes[i]||0, bytes[i+1]||0, bytes[i+2]||0, bytes[i+3]||0];
+    let val = 0;
+    for (const b of chunk) val = ((val << 8) | b) >>> 0;
+    words.push(val);
+  }
+  return words;
+}
+
+function generateValueWriteCode(addr, value){
+  return `00020000 ${hex8(addr)}\n${hex8(value)} 00000000`;
+}
+
+function generateStringWriteCode(addr, text, padLength){
+  const words = stageNameToWords(text, padLength || text.length);
+  const lines = [];
+  words.forEach((w, i) => {
+    lines.push(`00020000 ${hex8(addr + i*4)}`);
+    lines.push(`${hex8(w)} 00000000`);
+  });
+  return lines.join('\n');
+}
+
+function parseHex(str, fallback){
+  const cleaned = (str || '').trim().replace(/^0[xX]/, '').replace(/[^0-9a-fA-F]/g, '');
+  if (cleaned.length === 0) return fallback;
+  return parseInt(cleaned, 16);
+}
+
+/* ===================== タブ切り替え ===================== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ===================== タブ1: ステージ変更 ===================== */
+const PAD_LEN = "Fld_BossCylinderKing_Bos_Msn".length; // 29
+
+// [表示名, 内部名]。undefined区切りはoptgroup見出し
+const STAGE_GROUPS = [
+  ["試し打ち場 変換用", [
+    ["↺ 元に戻す(デフォルト: Shooting Range)", "Fld_ShootingRange_Shr"],
+    ["デカライン高架下 (Dojo)", "Fld_Crank00_Dul"],
+    ["ハコフグ倉庫 (Dojo)", "Fld_Warehouse00_Dul"],
+    ["シオノメ油田 (Dojo)", "Fld_SeaPlant00_Dul"],
+    ["アロワナモール (Dojo)", "Fld_UpDown00_Dul"],
+    ["Bバスパーク (Dojo)", "Fld_SkatePark00_Dul"],
+  ]],
+  ["通常対戦ステージ(参考/実験用)", [
+    ["デカライン高架下", "Fld_Crank00_Vss"],
+    ["ハコフグ倉庫", "Fld_Warehouse00_Vss"],
+    ["シオノメ油田", "Fld_SeaPlant00_Vss"],
+    ["アロワナモール", "Fld_UpDown00_Vss"],
+    ["Bバスパーク", "Fld_SkatePark00_Vss"],
+    ["モンガラキャンプ場", "Fld_Athletic00_Vss"],
+    ["ホッケふ頭", "Fld_Amida00_Vss"],
+    ["モズク農園", "Fld_Maze00_Vss"],
+    ["タチウオパーキング", "Fld_Tuzura00_Vss"],
+    ["ネギトロ炭鉱", "Fld_Ruins00_Vss"],
+    ["アンチョビットゲームズ", "Fld_Office00_Vss"],
+    ["ショッツル鉱山", "Fld_Quarry00_Vss"],
+    ["ヒラメが丘団地", "Fld_Jyoheki00_Vss"],
+    ["キンメダイ美術館", "Fld_Pivot00_Vss"],
+    ["マヒマヒリゾート＆スパ", "Fld_Hiagari00_Vss"],
+    ["マサバ海峡大橋", "Fld_Kaisou00_Vss"],
+  ]],
+  ["ヒーローモード(オクト・バレー)", [
+    ["01 タコトルーパーの秘密基地", "Fld_EasyHide00_Msn"],
+    ["02 タコボールのすみか", "Fld_EasyClimb00_Msn"],
+    ["03 たそがれのタコプター", "Fld_EasyJump00_Msn"],
+    ["ボス1 タコツボックス", "Fld_BossStampKing_Bos_Msn"],
+    ["04 ふき上がるカンケツセン", "Fld_Geyser00_Msn"],
+    ["05 スポンジの空中庭園", "Fld_Sponge00_Msn"],
+    ["06 プロペラリフトの波止場", "Fld_Propeller00_Msn"],
+    ["07 行って帰ってヌリヌリバー", "Fld_PaintingLift00_Msn"],
+    ["08 しゅうらい!タコゾネス", "Fld_RvlMaze00_Msn"],
+    ["09 UFOは実在した!", "Fld_OctZero00_Msn"],
+    ["ボス2 タコツボドラム", "Fld_BossCylinderKing_Bos_Msn"],
+    ["10 (Inkrail Skyscape)", "Fld_InkRail00_Msn"],
+    ["11 (Inkvisible Avenues)", "Fld_Invisible00_Msn"],
+    ["12 (Flooder Junkyard)", "Fld_Dozer00_Msn"],
+    ["13 (Shifting Splatforms)", "Fld_SlideLift00_Msn"],
+    ["14 (Octoling Assault)", "Fld_RvlSkatePark00_Msn"],
+    ["15 (Undeniable Flying Object)", "Fld_OctRuins00_Msn"],
+    ["ボス3 タコツボール", "Fld_BossBallKing_Bos_Msn"],
+    ["16 プロペラリフトのようさい", "Fld_Propeller01_Msn"],
+    ["17 タコスナイパーのとりで", "Fld_Charge00_Msn"],
+    ["18 ぐるりめぐってヌリヌリバー", "Fld_PaintingLift01_Msn"],
+    ["19 ぐるんるんステーション", "Fld_TurnLift00_Msn"],
+    ["20 かくせい!タコゾネス", "Fld_RvlRuins00_Msn"],
+    ["21 (Unwelcome Flying Object)", "Fld_OctCrank00_Msn"],
+    ["ボス4 タコツボファング", "Fld_BossMouthKing_Bos_Msn"],
+    ["22 (Switch Box Shake-Up)", "Fld_Trance00_Msn"],
+    ["23 (Spongy Observatory)", "Fld_Sponge01_Msn"],
+    ["24 (Pinwheel Power Plant)", "Fld_Fusya00_Msn"],
+    ["25 (Far-Flung Flooders)", "Fld_Dozer01_Msn"],
+    ["26 (Octoling Onslaught)", "Fld_RvlSeaPlant00_Msn"],
+    ["27 (Unavoidable Flying Object)", "Fld_OctSkatePark00_Msn"],
+    ["ボス5 タコツボキング(ラスボス)", "Fld_BossRailKing_Bos_Msn"],
+  ]],
+  ["その他", [
+    ["チュートリアル1", "Fld_Tutorial00_Ttr"],
+    ["チュートリアル2", "Fld_TutorialShow00_Ttr"],
+    ["マッチルーム", "Fld_MatchRoom_Mch"],
+    ["スタッフロール", "Fld_StaffRoll00_Stf"],
+  ]],
 ];
 
-const PAD_LEN = "Fld_BossCylinderKing_Bos_Msn".length; // 29, 元ツールのフィールド幅に合わせる
-
 const stageSel = document.getElementById('stageSel');
-stages.forEach(([label, internal], i) => {
-  const opt = document.createElement('option');
-  opt.value = i;
-  opt.textContent = label;
-  if (internal === null) opt.disabled = true;
-  stageSel.appendChild(opt);
+STAGE_GROUPS.forEach(([groupLabel, items]) => {
+  const og = document.createElement('optgroup');
+  og.label = groupLabel;
+  items.forEach(([label, internal]) => {
+    const opt = document.createElement('option');
+    opt.value = internal;
+    opt.textContent = label;
+    og.appendChild(opt);
+  });
+  stageSel.appendChild(og);
 });
-stageSel.selectedIndex = 0;
 
 const addrInput = document.getElementById('addr');
 document.querySelectorAll('#verChips .chip').forEach(chip => {
@@ -285,61 +334,108 @@ document.querySelectorAll('#verChips .chip').forEach(chip => {
   });
 });
 
-function stageNameToWords(name, padLength){
-  const bytes = [];
-  for (const ch of name) bytes.push(ch.charCodeAt(0) & 0xFF);
-  while (bytes.length < padLength) bytes.push(0);
-  const words = [];
-  for (let i = 0; i < bytes.length; i += 4){
-    const chunk = bytes.slice(i, i+4);
-    while (chunk.length < 4) chunk.push(0);
-    let val = 0;
-    for (const b of chunk) val = ((val << 8) | b) >>> 0;
-    words.push(val);
-  }
-  return words;
-}
-
-function hex8(n){
-  return (n >>> 0).toString(16).toUpperCase().padStart(8, '0');
-}
-
-document.getElementById('genBtn').addEventListener('click', () => {
-  const idx = stageSel.value;
-  const [label, internal] = stages[idx];
-  if (!internal){
-    alert('ステージを選択してください');
-    return;
-  }
-  let addrText = addrInput.value.trim().replace(/^0[xX]/, '').replace(/[^0-9a-fA-F]/g, '');
-  if (addrText.length === 0 || addrText.length > 8){
-    alert('アドレスは1〜8桁の16進数で入力してください');
-    return;
-  }
-  const baseAddr = parseInt(addrText, 16);
-  const words = stageNameToWords(internal, PAD_LEN);
-
-  let lines = [];
-  lines.push(`// 試し打ち場 → ${label}`);
-  lines.push(`// internal name: ${internal}`);
-  words.forEach((w, i) => {
-    const addr = baseAddr + i*4;
-    lines.push(`04${hex8(addr)} ${hex8(w)}`);
-  });
-
-  document.getElementById('outCode').textContent = lines.join('\n');
-  document.getElementById('outPanel').classList.remove('hidden');
+document.getElementById('genStageBtn').addEventListener('click', () => {
+  const internal = stageSel.value;
+  const label = stageSel.options[stageSel.selectedIndex].textContent;
+  const baseAddr = parseHex(addrInput.value, null);
+  if (baseAddr === null){ alert('アドレスは1〜8桁の16進数で入力してください'); return; }
+  const code = generateStringWriteCode(baseAddr, internal, PAD_LEN);
+  document.getElementById('outCodeStage').textContent = code;
+  document.getElementById('outPanelStage').classList.remove('hidden');
 });
 
-document.getElementById('copyBtn').addEventListener('click', () => {
-  const text = document.getElementById('outCode').textContent;
+document.getElementById('copyBtnStage').addEventListener('click', () => copyText('outCodeStage', 'copyBtnStage'));
+
+/* ===================== タブ2: 既知チート ===================== */
+const KNOWN_CHEATS = [
+  { name: "所持金 最大 (9999999G)", addr: 0x12CDB1A0, type: "fixed", value: 0x0098967F },
+  { name: "ランクレベル (1〜20)", addr: 0x12CDB1A4, type: "input", placeholder: "00000005" },
+  { name: "ヒーローの貝 最大 (999個)", addr: 0x12CDB1B6, type: "fixed", value: 0x000003E7 },
+];
+
+const knownList = document.getElementById('knownCheatsList');
+KNOWN_CHEATS.forEach((cheat, idx) => {
+  const row = document.createElement('div');
+  row.className = 'cheat-row';
+  let inputHtml = '';
+  if (cheat.type === 'input'){
+    inputHtml = `<input type="text" id="known-input-${idx}" placeholder="${cheat.placeholder}" maxlength="8" autocapitalize="characters">`;
+  }
+  row.innerHTML = `
+    <div class="cheat-info">
+      <div class="cheat-name">${cheat.name}</div>
+      <div class="cheat-addr">${hex8(cheat.addr)}</div>
+    </div>
+    ${inputHtml}
+    <button class="small" data-idx="${idx}">生成</button>
+  `;
+  knownList.appendChild(row);
+});
+
+knownList.addEventListener('click', (e) => {
+  if (e.target.tagName !== 'BUTTON') return;
+  const idx = parseInt(e.target.dataset.idx);
+  const cheat = KNOWN_CHEATS[idx];
+  let value;
+  if (cheat.type === 'fixed'){
+    value = cheat.value;
+  } else {
+    const raw = document.getElementById(`known-input-${idx}`).value;
+    value = parseHex(raw, null);
+    if (value === null){ alert('値を8桁hexで入力してください(例: 00000005)'); return; }
+  }
+  const code = generateValueWriteCode(cheat.addr, value);
+  document.getElementById('outCodeKnown').textContent = code;
+  document.getElementById('outPanelKnown').classList.remove('hidden');
+});
+
+document.getElementById('copyBtnKnown').addEventListener('click', () => copyText('outCodeKnown', 'copyBtnKnown'));
+
+/* ===================== タブ3: カスタムコード ===================== */
+let customType = 'value';
+document.querySelectorAll('#customTypeChips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#customTypeChips .chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    customType = chip.dataset.type;
+    document.getElementById('customValueField').classList.toggle('hidden', customType !== 'value');
+    document.getElementById('customStringField').classList.toggle('hidden', customType !== 'string');
+  });
+});
+
+document.getElementById('customString').addEventListener('input', (e) => {
+  document.getElementById('customPadHint').textContent = `パディング長省略時は文字列長(${e.target.value.length}バイト)を使用`;
+});
+
+document.getElementById('genCustomBtn').addEventListener('click', () => {
+  const addr = parseHex(document.getElementById('customAddr').value, null);
+  if (addr === null){ alert('アドレスは1〜8桁の16進数で入力してください'); return; }
+  let code;
+  if (customType === 'value'){
+    const value = parseHex(document.getElementById('customValue').value, null);
+    if (value === null){ alert('値を8桁hexで入力してください'); return; }
+    code = generateValueWriteCode(addr, value);
+  } else {
+    const text = document.getElementById('customString').value;
+    if (!text){ alert('文字列を入力してください'); return; }
+    code = generateStringWriteCode(addr, text, text.length);
+  }
+  document.getElementById('outCodeCustom').textContent = code;
+  document.getElementById('outPanelCustom').classList.remove('hidden');
+});
+
+document.getElementById('copyBtnCustom').addEventListener('click', () => copyText('outCodeCustom', 'copyBtnCustom'));
+
+/* ===================== コピー共通 ===================== */
+function copyText(preId, btnId){
+  const text = document.getElementById(preId).textContent;
   navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copyBtn');
+    const btn = document.getElementById(btnId);
     const orig = btn.textContent;
     btn.textContent = 'コピーしました';
     setTimeout(() => btn.textContent = orig, 1200);
   });
-});
+}
 </script>
 </body>
 </html>
